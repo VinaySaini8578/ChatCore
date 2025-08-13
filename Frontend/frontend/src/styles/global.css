@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/* Font: Inter */
+body, html {
+  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f1f5fa 0%, #f9f1fa 100%);
+}
+
+/* Glassmorphism effect */
+.glass-card {
+  background: rgba(255,255,255,0.75);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.11);
+  backdrop-filter: blur(12px);
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.dark .glass-card {
+  background: rgba(28, 34, 48, 0.85);
+  border-color: rgba(64, 68, 107, 0.21);
+}
+
+/* Subtle bounce animation for emojis */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+/* Fade in animation for messages */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #b1b8d1;
+  border-radius: 6px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #44506b;
+}
+
+/* Animations */
+@keyframes fade-in { from { opacity: 0; transform: translateY(12px);} to { opacity: 1; transform: translateY(0);} }
+.animate-fade-in { animation: fade-in 0.4s cubic-bezier(0.4,0,0.2,1); }
+
+@keyframes pop { 0% {transform: scale(0.95);} 100% {transform: scale(1);} }
+.animate-pop { animation: pop 0.18s cubic-bezier(0.4,0,0.2,1); }
+
+.btn-hover:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 24px 0 rgba(80, 110, 255, 0.12);
+}
+
+/* Chat bubble glass effect */
+.chat-bubble-own {
+  background: linear-gradient(110deg, #5a6dff 60%, #bc6ff1 100%);
+  color: #fff;
+  border-radius: 22px 22px 8px 22px;
+  box-shadow: 0 2px 18px 0 rgba(90, 109, 255, 0.13);
+}
+
+.chat-bubble-other {
+  background: rgba(255,255,255,0.75);
+  color: #24243c;
+  border-radius: 22px 22px 22px 8px;
+  box-shadow: 0 2px 18px 0 rgba(180, 180, 230, 0.09);
+  border: 1px solid #f0f0f6;
+}
+
+.dark .chat-bubble-other {
+  background: rgba(44, 52, 74, 0.95);
+  color: #e8e8fd;
+  border: 1px solid #3d4060;
+}
+
+/* Avatars */
+.avatar-ring {
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px 0 rgba(120, 110, 255, 0.08);
+}
