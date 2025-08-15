@@ -1,0 +1,58 @@
+.replyBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 8px 16px;
+}
+
+.replyBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.replyBarTexts {
+  display: flex;
+  flex-direction: column;
+}
+
+.replyBarTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #00a884;
+}
+
+.replyBarSnippet {
+  font-size: 13px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+.replyBarClose {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.replyBarClose:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #334155;
+}
+
+@media (max-width: 576px) {
+  .replyBarSnippet {
+    max-width: 200px;
+  }
+}

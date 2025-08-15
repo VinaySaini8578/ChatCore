@@ -1,0 +1,102 @@
+.chatWindow {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcomeState {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+}
+
+.welcomeContent {
+  text-align: center;
+  max-width: 500px;
+}
+
+.logoContainer {
+  position: relative;
+  margin-bottom: 32px;
+  display: inline-block;
+}
+
+.logo {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #00a884, #059669);
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 20px 40px rgba(0, 168, 132, 0.2);
+  position: relative;
+  animation: float 6s ease-in-out infinite;
+}
+
+.logoIcon {
+  width: 48px;
+  height: 48px;
+  color: white;
+}
+
+.logoSparkle {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  border-radius: 50%;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.logoSparkle::before {
+  content: '✨';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+}
+
+.welcomeTitle {
+  color: #0f172a;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  letter-spacing: -1px;
+}
+
+.welcomeDescription {
+  color: #334155;
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    opacity: 0.8;
+  }
+}
