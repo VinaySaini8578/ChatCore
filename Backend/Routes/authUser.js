@@ -1,9 +1,20 @@
 const express = require("express");
-const { userRegister, userLogin, logOut } = require("../Controllers/userRouteController");
-const Router = express.Router();
+const { 
+    checkEmailStatus,
+    verifyAndRegister,
+    loginWithPassword,
+    getCurrentUser,
+    logOut
+} = require("../Controllers/userRouteController.js");
+const authMiddleware = require("../MiddleWares/isLoggedIn.js");
 
-Router.post("/register", userRegister);
-Router.post("/login", userLogin);
-Router.post("/logout", logOut);
+const router = express.Router();
 
-module.exports = Router;
+// New smart authentication routes
+router.post("/check-email", checkEmailStatus);
+router.post("/verify-and-register", verifyAndRegister);
+router.post("/login-with-password", loginWithPassword);
+router.get("/me", authMiddleware, getCurrentUser);
+router.post("/logout", authMiddleware, logOut);
+
+module.exports = router;

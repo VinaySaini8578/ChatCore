@@ -1,0 +1,12 @@
+.center { display:flex; align-items:center; gap:8px; color:#64748b; }
+.section { border:1px solid rgba(148,163,184,.28); border-radius:12px; padding:10px; margin-bottom:10px; background:#fff; }
+.sectionHead { display:flex; align-items:center; gap:6px; font-weight:800; color:#0f172a; margin-bottom:8px; }
+.users { display:flex; flex-direction:column; gap:8px; }
+.user { display:flex; gap:10px; align-items:center; padding:6px; border-radius:10px; }
+.user:hover { background: rgba(15,23,42,.03); }
+.avatar { width:32px; height:32px; border-radius:10px; overflow:hidden; background:linear-gradient(135deg,#00a884,#059669); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; }
+.avatar img { width:100%; height:100%; object-fit:cover; }
+.meta { min-width:0; }
+.name { font-weight:700; color:#0f172a; }
+.username { color:#94a3b8; font-size:12px; }
+.empty { color:#94a3b8; font-size:14px; padding:4px 2px; }

@@ -1,95 +1,421 @@
-const bcryptjs = require("bcryptjs")
-const User = require("../Models/userModel")
-const jwtToken = require("../utils/jwtWebToken")
+const bcryptjs = require("bcryptjs");
+const User = require("../Models/userModel");
+const jwtToken = require("../utils/jwtWebToken");
+const { generateVerificationCode, sendVerificationEmail } = require("../utils/emailService");
 
-const userRegister = async (req, res) => {
-  try {
-    const { fullname, username, email, gender, password, profilepic } = req.body;
+// Check email status and determine the flow
+const checkEmailStatus = async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        if (!email) {
+            return res.status(400).json({ success: false, msg: "Email is required" });
+        }
 
-    const existingUser = await User.findOne({
-      $or: [{ username }, { email }]  // check if username "OR" email already exists
-    });
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ success: false, msg: "Invalid email format" });
+        }
 
-    if (existingUser) {
-      return res.status(400).json({success: false, msg: "Username or Email already exists"});
+        const normalizedEmail = email.toLowerCase().trim();
+        console.log(`🔍 Checking email status for: ${normalizedEmail}`);
+
+        // Check if user exists with verified email and complete registration
+        const existingUser = await User.findOne({ 
+            email: normalizedEmail,
+            isEmailVerified: true,
+            isRegistrationComplete: true
+        });
+
+        if (existingUser) {
+            console.log(`✅ User exists and is verified: ${normalizedEmail}`);
+            return res.status(200).json({
+                success: true,
+                userExists: true,
+                needsPassword: true,
+                msg: "Enter your password to continue",
+                userId: existingUser._id
+            });
+        }
+
+        console.log(`📧 New user, need to send verification: ${normalizedEmail}`);
+        
+        // Generate verification code for new user
+        const code = generateVerificationCode();
+        const expirationTime = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+        // Try to send email FIRST
+        const emailSent = await sendVerificationEmail(normalizedEmail, code);
+        
+        if (!emailSent) {
+            console.error(`❌ Failed to send email to ${normalizedEmail}`);
+            return res.status(500).json({ 
+                success: false, 
+                msg: "Failed to send verification email. Please try again." 
+            });
+        }
+
+        console.log(`✅ Verification email sent to ${normalizedEmail}`);
+
+        // Save to database after email is sent successfully
+        let user = await User.findOne({ email: normalizedEmail });
+
+        if (user) {
+            // Update existing unverified user
+            user.emailVerificationCode = code;
+            user.emailVerificationExpires = expirationTime;
+            user.isEmailVerified = false;
+            user.isRegistrationComplete = false;
+            await user.save({ validateBeforeSave: false });
+        } else {
+            // Create new user entry
+            user = new User({
+                email: normalizedEmail,
+                emailVerificationCode: code,
+                emailVerificationExpires: expirationTime,
+                isEmailVerified: false,
+                isRegistrationComplete: false
+            });
+            await user.save({ validateBeforeSave: false });
+        }
+
+        res.status(200).json({
+            success: true,
+            userExists: false,
+            needsVerification: true,
+            msg: "Verification code sent to your email",
+            userId: user._id
+        });
+
+    } catch (error) {
+        console.error("checkEmailStatus error:", error);
+        res.status(500).json({ 
+            success: false, 
+            msg: "Server error. Please try again." 
+        });
     }
-    // Protect the password before registering the user
-    const hashPW = await bcryptjs.hash(password, 10);
+};
 
-    const newUser = await User.create({  // added to database
-      fullname,
-      username,
-      email,
-      gender,
-      password: hashPW,
-    });
+// Verify email code and complete registration
+const verifyAndRegister = async (req, res) => {
+    try {
+        const { userId, code, fullname, username, gender, password } = req.body;
 
-    jwtToken(newUser._id, res); // create JWT token to permit Login
+        console.log(`🔍 Verifying code and registering user: ${userId}`);
 
-    res.status(201).json({  
+        // Validate required fields
+        if (!userId || !code || !fullname || !username || !password) {
+            return res.status(400).json({ 
+                success: false, 
+                msg: "All fields are required" 
+            });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ 
+                success: false, 
+                msg: "Password must be at least 6 characters long" 
+            });
+        }
+
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(400).json({ success: false, msg: "User not found" });
+        }
+
+        // Verify the code
+        if (!user.emailVerificationCode || user.emailVerificationCode !== code) {
+            return res.status(400).json({ success: false, msg: "Invalid verification code" });
+        }
+
+        if (!user.emailVerificationExpires || user.emailVerificationExpires < new Date()) {
+            return res.status(400).json({ success: false, msg: "Verification code has expired" });
+        }
+
+        const normalizedUsername = username.toLowerCase().trim();
+
+        // Check if username already exists
+        const existingUsername = await User.findOne({ 
+            username: normalizedUsername, 
+            _id: { $ne: userId },
+            isRegistrationComplete: true
+        });
+        
+        if (existingUsername) {
+            return res.status(400).json({ success: false, msg: "Username already exists" });
+        }
+
+        // Complete registration
+        user.fullname = fullname.trim();
+        user.username = normalizedUsername;
+        user.gender = gender || "male";
+        user.password = password; // Will be hashed by pre-save middleware
+        user.isEmailVerified = true;
+        user.isRegistrationComplete = true;
+        user.isOnline = true;
+        user.lastSeen = new Date();
+        user.emailVerificationCode = "";
+        user.emailVerificationExpires = null;
+        user.about = "Hey there! I am using ChatCore.";
+        
+        await user.save();
+
+        console.log(`✅ Registration completed for: ${user.email}`);
+
+        // Generate JWT token
+        jwtToken(user._id, res);
+
+        res.status(200).json({
+            success: true,
+            msg: "Registration completed successfully",
+            user: {
+                _id: user._id,
+                fullname: user.fullname,
+                username: user.username,
+                email: user.email,
+                gender: user.gender,
+                profilepic: user.profilepic,
+                about: user.about,
+                isOnline: user.isOnline
+            }
+        });
+
+    } catch (error) {
+        console.error("verifyAndRegister error:", error);
+        
+        if (error.code === 11000) {
+            return res.status(400).json({ success: false, msg: "Username already exists" });
+        }
+        
+        if (error.name === 'ValidationError') {
+            const firstError = Object.values(error.errors)[0];
+            return res.status(400).json({ success: false, msg: firstError.message });
+        }
+        
+        res.status(500).json({ success: false, msg: "Server error" });
+    }
+};
+
+// Login with password
+const loginWithPassword = async (req, res) => {
+    try {
+        const { userId, password } = req.body;
+
+        if (!userId || !password) {
+            return res.status(400).json({ success: false, msg: "User ID and password are required" });
+        }
+
+        console.log(`🔐 Login attempt for user ID: ${userId}`);
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(400).json({ success: false, msg: "User not found" });
+        }
+
+        if (!user.isEmailVerified || !user.isRegistrationComplete) {
+            return res.status(400).json({ success: false, msg: "Account not properly set up" });
+        }
+
+        // Verify password
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            console.log(`❌ Invalid password for user: ${user.email}`);
+            return res.status(401).json({ success: false, msg: "Incorrect password" });
+        }
+
+        // Update online status
+        user.isOnline = true;
+        user.lastSeen = new Date();
+        await user.save({ validateBeforeSave: false });
+
+        console.log(`✅ Login successful for: ${user.email}`);
+
+        // Generate JWT token
+        jwtToken(user._id, res);
+
+        res.status(200).json({
+            success: true,
+            msg: "Login successful",
+            user: {
+                _id: user._id,
+                fullname: user.fullname,
+                username: user.username,
+                email: user.email,
+                gender: user.gender,
+                profilepic: user.profilepic,
+                about: user.about,
+                isOnline: user.isOnline,
+                lastSeen: user.lastSeen
+            }
+        });
+
+    } catch (error) {
+        console.error("loginWithPassword error:", error);
+        res.status(500).json({ success: false, msg: "Server error" });
+    }
+};
+
+
+// Logout function
+const logOut = async (req, res) => {
+    try {
+        if (req.user && req.user._id) {
+            await User.findByIdAndUpdate(req.user._id, {
+                isOnline: false,
+                lastSeen: new Date()
+            });
+            console.log(`👋 User logged out: ${req.user._id}`);
+        }
+
+        res.cookie("jwt", "", { maxAge: 0 });
+        res.status(200).json({ success: true, message: "Logout successful" });
+    } catch (error) {
+        console.error("logOut error:", error);
+        res.status(500).json({ success: false, msg: "Server error" });
+    }
+};
+
+// Cleanup function
+const cleanupUnverifiedUsers = async () => {
+    try {
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        
+        const result = await User.deleteMany({
+            isEmailVerified: false,
+            createdAt: { $lt: oneDayAgo }
+        });
+        
+        if (result.deletedCount > 0) {
+            console.log(`🧹 Cleaned up ${result.deletedCount} unverified users`);
+        }
+    } catch (error) {
+        console.error('Cleanup error:', error);
+    }
+};
+
+// Run cleanup every hour
+setInterval(cleanupUnverifiedUsers, 60 * 60 * 1000);
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password -emailVerificationCode');
+    
+    if (!user) {
+      return res.status(404).json({ success: false, msg: "User not found" });
+    }
+
+    // Update last seen
+    user.isOnline = true;
+    user.lastSeen = new Date();
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
       success: true,
-      msg: "User registered successfully",
       user: {
-        _id: newUser._id,
-        fullname: newUser.fullname,
-        username: newUser.username,
-        email: newUser.email,
-      },
+        _id: user._id,
+        fullname: user.fullname,
+        username: user.username,
+        email: user.email,
+        gender: user.gender,
+        profilepic: user.profilepic,
+        about: user.about,
+        isOnline: user.isOnline,
+        lastSeen: user.lastSeen
+      }
     });
-    console.log("New user created:", newUser);
-  } catch (err) {
-    console.error(err.message);
+
+  } catch (error) {
+    console.error("getCurrentUser error:", error);
     res.status(500).json({ success: false, msg: "Server error" });
   }
 };
 
-const userLogin = async (req, res) => {
+
+// Update profile (profile picture upload and status/about)
+const updateProfile = async (req, res) => {
   try {
-    console.log("REQ BODY: ", req.body);
-    const { email, password } = req.body;
-    const existingUser = await User.findOne({ email });
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ success: false, msg: "User not found" });
 
-    if (!existingUser) {
-      return res.status(400).send({ success: false, msg: "Email isn't registered" });
+    const { about, profilepicUrl } = req.body;
+    if (typeof about === 'string') user.about = about.slice(0, 150);
+    if (req.file) {
+      user.profilepic = `/uploads/${req.file.filename}`;
+    } else if (typeof profilepicUrl === 'string' && profilepicUrl.trim()) {
+      user.profilepic = profilepicUrl.trim();
     }
 
-    // Matching the password
-    const isMatch = await bcryptjs.compare(password, existingUser.password); 
+    await user.save({ validateBeforeSave: false });
 
-    if (!isMatch) {
-      return res.status(401).send({ success: false, msg: "Incorrect password" });
-    }
-
-    // Token to Login successfully
-    jwtToken(existingUser._id, res);
-
-    res.status(200).send({ // going to frontend to navigate to chatWindow
-      _id: existingUser._id,
-      fullname: existingUser.fullname,
-      username: existingUser.username,
-      profilepic: existingUser.profilepic,
-      email: existingUser.email,
-      message: "Login successful",
+    res.status(200).json({
+      success: true,
+      user: {
+        _id: user._id,
+        fullname: user.fullname,
+        username: user.username,
+        email: user.email,
+        gender: user.gender,
+        profilepic: user.profilepic,
+        about: user.about,
+        isOnline: user.isOnline,
+        lastSeen: user.lastSeen
+      }
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ success: false, msg: "Server error" });
+  } catch (e) {
+    console.error("updateProfile error:", e);
+    res.status(500).json({ success: false, msg: "Failed to update profile" });
   }
 };
 
-const logOut = (req, res) => { // just delete awt token
-    try {
-      res.cookie("jwt", "", { maxAge : 0 })  // token set Null
-      res.status(200).send({message:"Logout successful"})
-    } 
-    catch (error) {
-      res.status(500).send({
-          success: false,
-          msg: error,
-        })
-        console.log(error)
-    }
-}
+// Helper to compare ObjectIds safely
+const oidEq = (a, b) => String(a) === String(b);
 
-module.exports = { userRegister , userLogin, logOut};
+// Block / Unblock user (fix: robust equality + id casting)
+const blockUser = async (req, res) => {
+  try {
+    const me = req.user._id;
+    const { otherUserId } = req.params;
+    await User.updateOne({ _id: me }, { $addToSet: { blockedUsers: otherUserId } });
+    res.status(200).json({ success: true, message: "User blocked" });
+  } catch (e) {
+    res.status(500).json({ success: false, message: "Failed to block user" });
+  }
+};
 
+const unblockUser = async (req, res) => {
+  try {
+    const me = req.user._id;
+    const { otherUserId } = req.params;
+    await User.updateOne({ _id: me }, { $pull: { blockedUsers: otherUserId } });
+    res.status(200).json({ success: true, message: "User unblocked" });
+  } catch (e) {
+    res.status(500).json({ success: false, message: "Failed to unblock user" });
+  }
+};
+
+// List my blocked users
+const listBlocked = async (req, res) => {
+  try {
+    const me = await User.findById(req.user._id).select("blockedUsers");
+    const users = await User.find({ _id: { $in: me.blockedUsers || [] } })
+      .select("_id fullname username profilepic");
+    res.status(200).json({ success: true, data: users });
+  } catch (e) {
+    res.status(500).json({ success: false, message: "Failed to load blocked users" });
+  }
+};
+
+module.exports = { 
+    checkEmailStatus,
+    verifyAndRegister,
+    loginWithPassword,
+    getCurrentUser,
+    logOut,
+    cleanupUnverifiedUsers,
+    updateProfile,
+    blockUser,
+    unblockUser,
+    listBlocked
+};

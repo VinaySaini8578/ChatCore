@@ -1,0 +1,403 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.center { 
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  gap: 12px; 
+  color: #64748b; 
+  padding: 40px 20px;
+  height: 100%;
+}
+
+.emptyBox {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center; 
+  gap: 16px;
+  padding: 60px 24px;
+  color: #64748b;
+  height: 100%;
+  justify-content: center;
+}
+
+.emptyBox .icon {
+  color: #fbbf24;
+  margin-bottom: 8px;
+}
+
+.emptyBox h4 { 
+  color: #0f172a; 
+  margin: 0; 
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.emptyBox p {
+  margin: 0;
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.emptyHint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #94a3b8;
+  background: rgba(0, 0, 0, 0.03);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.header {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  margin-bottom: 8px;
+}
+
+.count {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.list { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+  flex: 1;
+  overflow-y: auto;
+}
+
+.item {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px; 
+  background: #ffffff;
+  padding: 12px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.item:hover {
+  background: rgba(0, 168, 132, 0.02);
+  border-color: rgba(0, 168, 132, 0.3);
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.senderInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.senderAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00a884, #059669);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.senderAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.senderDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.senderName {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.timestamp {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.unstarBtn {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.unstarBtn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.messageContent {
+  position: relative;
+}
+
+.replyContext {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 6px;
+}
+
+.replyBar {
+  width: 3px;
+  background: #00a884;
+  border-radius: 2px;
+  min-height: 24px;
+  flex-shrink: 0;
+}
+
+.replyText {
+  flex: 1;
+  min-width: 0;
+}
+
+.replyAuthor {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #00a884;
+  margin-bottom: 2px;
+}
+
+.replyContent {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.forwardedLabel {
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.mainMessage {
+  position: relative;
+}
+
+.mediaPreview {
+  margin-bottom: 8px;
+}
+
+.mediaPreview img,
+.mediaPreview video {
+  max-width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.audioMessage,
+.documentMessage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  font-size: 14px;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.audioIcon,
+.documentIcon {
+  font-size: 16px;
+}
+
+.textMessage {
+  color: #0f172a;
+  line-height: 1.4;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
+.starIndicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #fbbf24;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar */
+.list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 3px;
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 520px) {
+  .container {
+    padding: 0 12px;
+  }
+  
+  .emptyBox {
+    padding: 40px 16px;
+  }
+  
+  .item {
+    padding: 10px;
+  }
+  
+  .senderAvatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .senderName {
+    font-size: 13px;
+  }
+  
+  .textMessage {
+    font-size: 13px;
+  }
+}
+
+/* Animation for new items */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item {
+  animation: slideInDown 0.3s ease-out;
+}
+
+/* Focus states for accessibility */
+.unstarBtn:focus {
+  outline: 2px solid #00a884;
+  outline-offset: 2px;
+}
+
+.mediaPreview img:focus,
+.mediaPreview video:focus {
+  outline: 2px solid #00a884;
+  outline-offset: 2px;
+}
+
+/* Dark mode support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  .item {
+    background: #1e293b;
+    border-color: rgba(148, 163, 184, 0.1);
+  }
+  
+  .item:hover {
+    background: rgba(0, 168, 132, 0.05);
+  }
+  
+  .textMessage {
+    color: #f1f5f9;
+  }
+  
+  .senderName {
+    color: #f1f5f9;
+  }
+  
+  .replyContext {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .audioMessage,
+  .documentMessage {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #64748b;
+}
+
+/* Error state */
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  color: #ef4444;
+  text-align: center;
+}
+
+.error button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.error button:hover {
+  background: #dc2626;
+}

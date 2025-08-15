@@ -10,6 +10,12 @@ const handleSocketConnection = (io, socket) => {
         try {
             console.log("User joining:", userId);
 
+            // Update user online status in database
+            await User.findByIdAndUpdate(userId, {
+                isOnline: true,
+                lastSeen: new Date()
+            });
+
             // Fetch any pending messages for this user
             const pendingMessages = await Message.find({
                 receiverId: userId,
@@ -28,7 +34,7 @@ const handleSocketConnection = (io, socket) => {
                 });
             }
 
-            const user = await User.findById(userId).select("-password");
+            const user = await User.findById(userId).select("-password -emailVerificationCode");
             if (user) {
                 // Store user info with socket
                 onlineUsers.set(userId, {
@@ -42,7 +48,7 @@ const handleSocketConnection = (io, socket) => {
                 
                 console.log(`User ${user.fullname} joined room ${userId}`);
                 
-                // FIXED: Create consistent online users list
+                // Create consistent online users list
                 const onlineUsersList = Array.from(onlineUsers.values()).map(userData => ({
                     userId: userData.user._id,
                     user: userData.user
@@ -51,13 +57,13 @@ const handleSocketConnection = (io, socket) => {
                 // Send initial list to the newly connected user
                 socket.emit("online-users", onlineUsersList);
                 
-                // IMPORTANT: Broadcast that this user is online to ALL other users (not including themselves)
+                // Broadcast that this user is online to ALL other users
                 socket.broadcast.emit("user-online", {
                     userId: userId,
                     user: user
                 });
                 
-                // Send updated online users list to ALL users (including the new user)
+                // Send updated online users list to ALL users
                 io.emit("online-users-update", onlineUsersList);
                 
                 console.log(`User ${user.fullname} joined with socket ${socket.id}`);
@@ -69,7 +75,6 @@ const handleSocketConnection = (io, socket) => {
     });
 
     socket.on("typing-start", (data) => {
-        console.log("Typing start:", data);
         const { receiverId, senderName } = data;
         socket.to(receiverId).emit("user-typing", {
             senderId: socket.userId,
@@ -103,18 +108,47 @@ const handleSocketConnection = (io, socket) => {
         }
     });
 
+    // WebRTC call signaling (basic relay between peers)
+    socket.on("call-user", ({ toUserId, offer, callType }) => {
+        socket.to(toUserId).emit("incoming-call", {
+            fromUserId: socket.userId,
+            offer,
+            callType
+        });
+    });
+
+    socket.on("answer-call", ({ toUserId, answer }) => {
+        socket.to(toUserId).emit("call-answered", {
+            fromUserId: socket.userId,
+            answer
+        });
+    });
+
+    socket.on("ice-candidate", ({ toUserId, candidate }) => {
+        socket.to(toUserId).emit("ice-candidate", { fromUserId: socket.userId, candidate });
+    });
+
+    socket.on("end-call", ({ toUserId }) => {
+        socket.to(toUserId).emit("call-ended", { fromUserId: socket.userId });
+    });
+
     socket.on("typing-stop", (data) => {
-        console.log("Typing stop:", data);
         const { receiverId } = data;
         socket.to(receiverId).emit("user-stopped-typing", {
             senderId: socket.userId
         });
     });
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect", async () => {
         console.log("User disconnecting:", socket.userId);
         
         if (socket.userId) {
+            // Update user offline status in database
+            await User.findByIdAndUpdate(socket.userId, {
+                isOnline: false,
+                lastSeen: new Date()
+            });
+
             // Remove from online users
             onlineUsers.delete(socket.userId);
             

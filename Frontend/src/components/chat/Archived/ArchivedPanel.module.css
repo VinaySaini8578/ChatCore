@@ -1,0 +1,22 @@
+.center { display:flex; align-items:center; gap:8px; color:#64748b; }
+.emptyBox {
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+  padding: 24px 10px; color: #64748b;
+}
+.emptyBox h4 { color: #0f172a; margin: 6px 0 0; }
+.icon { font-size: 28px; }
+
+.list { display:flex; flex-direction: column; gap:10px; }
+.item {
+  display:flex; gap:10px; align-items:center; padding:10px; border:1px solid rgba(148,163,184,.25);
+  border-radius:12px; background:#fff;
+}
+.avatar {
+  width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(135deg,#00a884,#059669); color:#fff; font-weight:700;
+}
+.meta { flex:1; min-width:0; }
+.name { font-weight:700; color:#0f172a; }
+.sub { color:#94a3b8; font-size:12px; }
+.iconBtn { border:none; background:transparent; color:#334155; cursor:pointer; }
+.iconBtn:hover { color:#0f766e; }

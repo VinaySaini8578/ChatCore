@@ -1,68 +1,127 @@
 const User = require("../Models/userModel.js");
-const Conversation = require("../Models/conversationModel.js")
-const mongoose = require("mongoose")
+const Conversation = require("../Models/conversationModel.js");
+const Message = require("../Models/messageModel.js");
+
+// Search users (exclude me, verified only)
 const getUserBySearch = async (req, res) => {
-    try {
-        const search = req.query.search || ''; // ID to  be searched : if exists ; else empty string
-        const currentUserID = req.user._id;    // current userID , to exclude it later
+  try {
+    const q = (req.query.q ?? req.query.search ?? "").trim();
+    const currentUserID = req.user._id;
 
-        const user = await User.find({
-            $and: [
-                {
-                    $or: [
-                        { username: { $regex: '.*' + search + '.*', $options: 'i' } }, // case insensitive search
-                        { fullname: { $regex: '.*' + search + '.*', $options: 'i' } }  // .* means anything
-                    ]
-                },
-                { _id: { $ne: currentUserID } } // exclude current user - to avoid getting ourselves if similar name is searched 
-                                                // ne : not equal
-            ]
-        }).select("-password"); // all fields except password
+    const match = {
+      _id: { $ne: currentUserID },
+      isEmailVerified: true,
+    };
 
-        res.status(200).send(user);
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            success: false,
-            message: error.message
-        });
+    if (q) {
+      match.$or = [
+        { username: { $regex: q, $options: "i" } },
+        { fullname: { $regex: q, $options: "i" } },
+      ];
     }
+
+    const users = await User.find(match)
+      .select("-password -emailVerificationCode")
+      .sort({ fullname: 1 });
+
+    res.status(200).json({ data: users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
+// Sidebar list: return both 1:1 and groups (excluding archived by me)
+// For groups, also include participants so the UI can filter "already in group".
 const getCurrentChatters = async (req, res) => {
-    try {
-        // userId was injected into req via isLoggedIn middleware
-        const currentUserID = req.user._id;
+  try {
+    const currentUserID = req.user._id;
 
-        // Get conversations where current user is a participant
-        const currentChatters = await Conversation.find({
-        participants: { $in: [currentUserID] }
-        }).sort({ updatedAt: -1 }); // descending order : latest chat first ; 1 for ascending
+    const conversations = await Conversation.aggregate([
+      { $match: { participants: { $in: [currentUserID] }, archivedBy: { $nin: [currentUserID] } } },
+      {
+        $lookup: {
+          from: "messages",
+          localField: "messages",
+          foreignField: "_id",
+          as: "messageDetails",
+        },
+      },
+      {
+        $addFields: {
+          lastMessage: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$messageDetails",
+                  cond: { $not: { $in: [currentUserID, "$$this.deletedBy"] } },
+                },
+              },
+              -1,
+            ],
+          },
+        },
+      },
+      { $sort: { updatedAt: -1 } },
+      {
+        $project: {
+          participants: 1,
+          isGroup: 1,
+          name: 1,
+          groupAvatar: 1,
+          updatedAt: 1,
+          lastMessage: 1,
+        },
+      },
+    ]);
 
-        if (!currentChatters.length) {
-            return res.status(200).send([]); // return empty array if no chats found
-        }
-
-        // Extract all other participants' ID while removing ours from them
-        const allIDs = currentChatters.flatMap(conv => // flat Map : map and flatten - nested array to normal array
-            conv.participants.filter(id => id.toString() !== currentUserID.toString())
-        );
-
-        //  Remove duplicates if multiple chats with single person
-        const uniqueIDs = [...new Set(allIDs.map(id => id.toString()))];
-
-        //  Fetch user details to be shown
-        const users = await User.find({ _id: { $in: uniqueIDs } })
-            .select("-password -email");
-
-        res.status(200).send(users);
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ success: false, message: error.message });
+    if (!conversations.length) {
+      return res.status(200).json({ data: [] });
     }
+
+    const items = [];
+
+    for (const conv of conversations) {
+      if (conv.isGroup) {
+        items.push({
+          isGroup: true,
+          _id: conv._id,
+          name: conv.name,
+          groupAvatar: conv.groupAvatar,
+          participants: conv.participants, // send to FE so it can filter "already in group"
+          lastMessage: conv.lastMessage ? conv.lastMessage.message || "📎 Media" : "",
+          lastMessageTime: conv.lastMessage ? conv.lastMessage.createdAt : conv.updatedAt,
+        });
+      } else {
+        // 1:1 chat - find the other participant
+        const otherUserId = conv.participants.find(
+          (id) => id.toString() !== currentUserID.toString()
+        );
+        const user = await User.findById(otherUserId).select(
+          "-password -emailVerificationCode"
+        );
+        if (user) {
+          items.push({
+            isGroup: false,
+            _id: user._id,
+            fullname: user.fullname,
+            username: user.username,
+            profilepic: user.profilepic,
+            lastMessage: conv.lastMessage ? conv.lastMessage.message || "📎 Media" : "",
+            lastMessageTime: conv.lastMessage ? conv.lastMessage.createdAt : conv.updatedAt,
+          });
+        }
+      }
+    }
+
+    res.status(200).json({ data: items });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
 
-
-module.exports = {getUserBySearch, getCurrentChatters};
+module.exports = { getUserBySearch, getCurrentChatters };
