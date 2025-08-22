@@ -1,0 +1,207 @@
+.chatContainer {
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #f8fafc 0%, #ecfeff 50%, #f8fafc 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.backgroundPattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.patternCircle1,
+.patternCircle2,
+.patternCircle3 {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.06);
+  filter: blur(20px);
+  animation: float 8s ease-in-out infinite;
+}
+
+.patternCircle1 {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.patternCircle2 {
+  width: 400px;
+  height: 400px;
+  bottom: 10%;
+  right: 15%;
+  animation-delay: -2s;
+}
+
+.patternCircle3 {
+  width: 250px;
+  height: 250px;
+  top: 50%;
+  right: 10%;
+  animation-delay: -4s;
+}
+
+.chatWrapper {
+  width: 100%;
+  height: 100%;
+  max-width: 1400px;
+  max-height: 900px;
+  position: relative;
+  z-index: 10;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.chatInterface {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(229, 231, 235, 0.7);
+  overflow: hidden;
+  display: flex;
+  animation: slideUp 0.6s ease-out;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+}
+
+.sidebarContainer {
+  width: 380px;
+  min-width: 380px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(229, 231, 235, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebarContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.2), transparent);
+}
+
+.chatWindowContainer {
+  flex: 1;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.chatWindowContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  33% { 
+    transform: translateY(-10px) rotate(1deg); 
+  }
+  66% { 
+    transform: translateY(5px) rotate(-1deg); 
+  }
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Tablet/Laptop widths: shrink sidebar to keep split view usable in half screens */
+@media (max-width: 1200px) {
+  .chatWrapper {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+@media (max-width: 1024px) { 
+  .sidebarContainer {
+    width: 320px;
+    min-width: 320px;
+  }
+}
+
+/* Keep side-by-side layout down to ~780px, with narrower sidebar */
+@media (max-width: 900px) {
+  .sidebarContainer {
+    width: 280px;
+    min-width: 260px;
+  }
+}
+
+@media (max-width: 780px) {
+  .sidebarContainer {
+    width: 240px;
+    min-width: 240px;
+  }
+}
+
+/* Small phones: stack panels vertically */
+@media (max-width: 640px) {
+  .chatWrapper {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  .chatInterface {
+    border-radius: 0;
+    height: 100vh;
+    flex-direction: column;
+  }
+  
+  .sidebarContainer {
+    width: 100%;
+    height: 42%;
+    border-right: none;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+    min-width: 0;
+  }
+  
+  .chatWindowContainer {
+    height: 58%;
+  }
+}

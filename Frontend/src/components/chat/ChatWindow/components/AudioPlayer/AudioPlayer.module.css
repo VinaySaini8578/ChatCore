@@ -1,0 +1,102 @@
+.audioPlayer {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 12px 16px;
+  position: relative;
+  max-width: 280px;
+  min-width: 200px;
+  gap: 12px;
+}
+
+.audioPlayer.own {
+  background: linear-gradient(135deg, #00a884, #059669);
+}
+
+.playButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 168, 132, 0.12);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00a884;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.own .playButton {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.playButton:hover {
+  transform: scale(1.05);
+}
+
+.playerContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.playerProgress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.progressBar {
+  flex: 1;
+  height: 4px;
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.own .progressBar {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #00a884;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.own .progressFill {
+  background: #ffffff;
+}
+
+.duration {
+  font-size: 11px;
+  color: #64748b;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.own .duration {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 576px) {
+  .audioPlayer {
+    max-width: 240px;
+    padding: 10px 14px;
+  }
+  
+  .playButton {
+    width: 32px;
+    height: 32px;
+  }
+}

@@ -1,0 +1,216 @@
+/* Input Container */
+.inputContainer {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  position: relative;
+  /* Safe-area padding on iOS */
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+}
+
+.emojiPickerContainer {
+  position: absolute;
+  bottom: 100%;
+  left: 16px;
+  z-index: 50;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 24px;
+  padding: 10px 14px;
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+}
+
+.inputWrapper:focus-within {
+  border-color: #00a884;
+  box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.12);
+  background: #ffffff;
+}
+
+.inputButton {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.inputButton:hover {
+  background: rgba(0, 168, 132, 0.08);
+  color: #00a884;
+  transform: translateY(-1px);
+}
+
+.inputButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.inputIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.textInputWrapper {
+  flex: 1;
+  position: relative;
+}
+
+.textInput {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #0f172a;
+  font-size: 15px;
+  line-height: 1.5;
+  resize: none;
+  overflow-y: auto;
+  min-height: 24px;
+  max-height: 120px;
+  padding: 3px 0;
+  font-family: inherit;
+}
+
+.textInput::placeholder {
+  color: #94a3b8;
+}
+
+.textInput::-webkit-scrollbar {
+  width: 4px;
+}
+
+.textInput::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.textInput::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 2px;
+}
+
+.sendButton {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #00a884, #059669);
+  border: none;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(0, 168, 132, 0.3);
+}
+
+.sendButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 168, 132, 0.4);
+}
+
+.sendButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.sendIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Attach menu styling */
+.attachWrap {
+  position: relative;
+}
+
+.attachMenu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 20;
+  margin-bottom: 8px;
+}
+
+.attachOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.attachOption:hover {
+  background: #f1f5f9;
+}
+
+@media (max-width: 780px) {
+  .inputContainer {
+    padding: 10px 12px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  }
+
+  .inputWrapper {
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 18px;
+  }
+
+  .inputButton {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .sendButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .textInput {
+    font-size: 14px;
+    max-height: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  .emojiPickerContainer {
+    width: 95%;
+    left: 2.5%;
+  }
+}

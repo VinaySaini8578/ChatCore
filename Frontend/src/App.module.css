@@ -1,0 +1,7 @@
+.app {
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  transition: all 0.3s ease;
+}

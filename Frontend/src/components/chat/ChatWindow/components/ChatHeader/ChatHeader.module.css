@@ -1,0 +1,263 @@
+.chatHeader {
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 10;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #00a884, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.avatarText {
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.onlineDot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  background: #10b981;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.userDetails {
+  flex: 1;
+}
+
+.userName {
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.25px;
+}
+
+.userStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusText {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.typingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.typingText {
+  color: #00a884;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.typingDots {
+  display: flex;
+  gap: 2px;
+}
+
+.typingDots span {
+  width: 4px;
+  height: 4px;
+  background: #00a884;
+  border-radius: 50%;
+  animation: typingAnimation 1.5s ease-in-out infinite;
+}
+
+.typingDots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typingDots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typingDots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerButton {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px);
+}
+
+.headerButton:hover {
+  background: rgba(0, 168, 132, 0.08);
+  border-color: rgba(0, 168, 132, 0.25);
+  color: #00a884;
+  transform: translateY(-1px);
+}
+
+.headerButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.headerIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Selection mode header styles */
+.selectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.selectionInfo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.selectionText {
+  font-size: 16px;
+  font-weight: 600;
+  color: #00a884;
+}
+
+.selectionActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes typingAnimation {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+/* New mid-breakpoint for comfortable split-screen */
+@media (max-width: 780px) {
+  .chatHeader {
+    padding: 12px 14px;
+  }
+
+  .userInfo {
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .onlineDot {
+    width: 12px;
+    height: 12px;
+    bottom: -2px;
+    right: -2px;
+    border-width: 2px;
+  }
+
+  .userName {
+    font-size: 16px;
+  }
+
+  .statusText,
+  .typingText {
+    font-size: 12px;
+  }
+
+  .headerButton {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .headerIcon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .userInfo {
+    gap: 8px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .userName {
+    font-size: 16px;
+  }
+
+  .headerButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .headerActions {
+    gap: 4px;
+  }
+}

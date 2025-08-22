@@ -1,0 +1,32 @@
+.chatWindow {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  position: relative;
+  overflow: hidden;
+}
+
+.chatWindow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  background: linear-gradient(135deg, rgba(0, 168, 132, 0.06), rgba(5, 150, 105, 0.04));
+  pointer-events: none;
+}
+
+/* Slightly reduce top gradient height on narrow screens to free space */
+@media (max-width: 780px) {
+  .chatWindow::before {
+    height: 140px;
+  }
+}
+
+@media (max-width: 640px) {
+  .chatWindow::before {
+    height: 120px;
+  }
+}

@@ -1,0 +1,221 @@
+.recordingBox {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+.recordingContent {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.recordingPulse {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.recordingIcon {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.recordingIcon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #ef4444;
+  opacity: 0.7;
+  animation: ripple 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.recordingWaveform {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  flex: 1;
+  margin: 0 16px;
+}
+
+.waveformBar {
+  width: 3px;
+  height: 16px;
+  background-color: #00a884;
+  border-radius: 2px;
+  flex: 1;
+  animation: waveform 0.8s ease infinite alternate;
+}
+
+.waveformBar:nth-child(1) {
+  animation-delay: -0.8s;
+  height: 30%;
+}
+
+.waveformBar:nth-child(2) {
+  animation-delay: -0.7s;
+  height: 60%;
+}
+
+.waveformBar:nth-child(3) {
+  animation-delay: -0.6s;
+  height: 45%;
+}
+
+.waveformBar:nth-child(4) {
+  animation-delay: -0.5s;
+  height: 80%;
+}
+
+.waveformBar:nth-child(5) {
+  animation-delay: -0.4s;
+  height: 65%;
+}
+
+.waveformBar:nth-child(6) {
+  animation-delay: -0.3s;
+  height: 90%;
+}
+
+.waveformBar:nth-child(7) {
+  animation-delay: -0.2s;
+  height: 40%;
+}
+
+.waveformBar:nth-child(8) {
+  animation-delay: -0.1s;
+  height: 70%;
+}
+
+.waveformBar:nth-child(9) {
+  animation-delay: 0s;
+  height: 55%;
+}
+
+.waveformBar:nth-child(10) {
+  animation-delay: -0.9s;
+  height: 85%;
+}
+
+.recordingTimer {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.timerIcon {
+  font-size: 14px;
+}
+
+.timerText {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ef4444;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.recordingControls {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.recordingCancel,
+.recordingSend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  min-width: 70px;
+}
+
+.recordingCancel {
+  color: #64748b;
+}
+
+.recordingCancel:hover {
+  background: rgba(148, 163, 184, 0.12);
+  color: #334155;
+}
+
+.recordingSend {
+  color: #00a884;
+}
+
+.recordingSend:hover {
+  background: rgba(0, 168, 132, 0.12);
+}
+
+.btnLabel {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes waveform {
+  0% {
+    transform: scaleY(0.5);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}

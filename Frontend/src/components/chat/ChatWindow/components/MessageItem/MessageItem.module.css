@@ -1,0 +1,315 @@
+.messageWrapper {
+  display: flex;
+  margin: 8px 0;
+  animation: messageSlideIn 0.3s ease-out;
+  position: relative;
+  align-items: center;
+  cursor: pointer;
+  gap: 12px;
+}
+
+.messageWrapper.own {
+  justify-content: flex-end;
+}
+
+.messageWrapper.other {
+  justify-content: flex-start;
+}
+
+.messageBubble {
+  max-width: 70%;
+  position: relative;
+  border-radius: 18px;
+  transition: transform .05s ease-in;
+  padding: 2px;
+}
+
+.messageBubble:active {
+  transform: scale(.997);
+}
+
+.messageBubble.starred {
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15);
+}
+
+.own .messageBubble {
+  background: linear-gradient(135deg, #00a884, #059669);
+  border-radius: 18px 18px 6px 18px;
+  box-shadow: 0 4px 15px rgba(0, 168, 132, 0.2);
+}
+
+.other .messageBubble {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(148, 163, 184, .28);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, .06);
+  border-radius: 18px 18px 18px 6px;
+}
+
+.messageContent {
+  padding: 12px 16px 8px;
+}
+
+.messageText {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+  word-wrap: break-word;
+  font-weight: 400;
+}
+
+.own .messageText {
+  color: white;
+}
+
+.other .messageText {
+  color: #0f172a;
+}
+
+.deletedMessage {
+  font-style: italic;
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+.own .deletedMessage {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.other .deletedMessage {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+.messageMeta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 2px 12px 6px;
+  margin-top: 2px;
+}
+
+.messageTime {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.own .messageTime {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.other .messageTime {
+  color: #475569;
+}
+
+.messageStatus {
+  display: flex;
+  align-items: center;
+}
+
+.statusIconSent {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.statusIconDelivered {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 1);
+}
+
+.statusIconSeen {
+  width: 14px;
+  height: 14px;
+  color: #0284c7;
+}
+
+/* Message actions */
+.messageActions {
+  position: absolute;
+  top: -30px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+  padding: 4px 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+.actionBtn {
+  background: transparent;
+  border: none;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.actionBtn:hover {
+  background: rgba(0, 168, 132, 0.08);
+  color: #00a884;
+}
+
+/* Media styles */
+.mediaImage,
+.mediaVideo {
+  max-width: 350px;
+  border-radius: 12px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.mediaDocument {
+  max-width: 350px;
+}
+
+/* Style the message selection visual cues */
+.messageWrapper.selected {
+  background-color: rgba(0, 168, 132, 0.08);
+  border-radius: 12px;
+}
+
+/* Style the selection circle */
+.selectCircle {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border: 2px solid rgba(0, 168, 132, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.15s ease-in-out;
+}
+
+.messageWrapper.selected .selectCircle {
+  background: #00a884;
+  border-color: #00a884;
+  color: white;
+}
+
+.selectCircle:hover {
+  transform: scale(1.1);
+}
+
+/* Message hover effect in selection mode */
+.messageWrapper:hover:not(.selected) {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+}
+
+.groupSenderLine {
+  font-size: 11px;
+  color: #0f766e;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.groupSenderName {
+  background: rgba(0, 168, 132, .08);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* Star indicator */
+.starIndicator {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  color: #f59e0b;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 2px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Reply strip and forward badge */
+.replyStrip {
+  background: rgba(148, 163, 184, 0.1);
+  border-left: 3px solid #00a884;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 0 8px 8px 0;
+}
+
+.replySender {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.replySnippet {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.forwardBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.highlighted {
+  animation: highlightAnimation 2s ease;
+}
+.audioMessageContainer {
+  position: relative;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes highlightAnimation {
+  0%, 100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(0, 168, 132, 0.2);
+  }
+}
+
+@media (max-width: 576px) {
+  .messageBubble {
+    max-width: 85%;
+  }
+
+  .messageContent {
+    padding: 10px 12px 6px;
+  }
+
+  .mediaImage,
+  .mediaVideo {
+    max-width: 100%;
+  }
+}

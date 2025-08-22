@@ -1,0 +1,200 @@
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+  padding: 16px 0;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.messagesContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messagesContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messagesContainer::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 3px;
+}
+
+.messagesContainer::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+
+/* Loading State */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+}
+
+.loadingText {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(0, 168, 132, 0.1), rgba(5, 150, 105, 0.05));
+  border: 2px solid rgba(0, 168, 132, 0.2);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.emptyIconSvg {
+  width: 36px;
+  height: 36px;
+  color: #00a884;
+}
+
+.emptyTitle {
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.emptyDescription {
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 300px;
+}
+
+/* Messages Area */
+.messagesArea {
+  padding: 0 20px 16px;
+}
+
+.messageGroup {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.dateDivider {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.dateLabel {
+  background: rgba(148, 163, 184, 0.15);
+  color: #475569;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+/* Unread strip */
+.unreadDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0;
+  position: relative;
+}
+
+.unreadDivider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(14, 165, 233, 0.2);
+  z-index: 0;
+}
+
+.unreadDivider span {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0369a1;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 24px;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  box-shadow: 0 2px 5px rgba(14, 165, 233, 0.1);
+}
+
+/* Scroll Button */
+.scrollButton {
+  position: absolute;
+  bottom: 80px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #00a884, #059669);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0, 168, 132, 0.3);
+  transition: all 0.3s ease;
+  z-index: 20;
+}
+
+.scrollButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(0, 168, 132, 0.4);
+}
+
+.scrollIcon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive paddings and button size for split screen */
+@media (max-width: 900px) {
+  .messagesArea {
+    padding: 0 16px 14px;
+  }
+}
+
+@media (max-width: 780px) {
+  .messagesArea {
+    padding: 0 12px 12px;
+  }
+
+  .scrollButton {
+    width: 44px;
+    height: 44px;
+    right: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .messagesArea {
+    padding: 0 10px 10px;
+  }
+
+  .scrollButton {
+    width: 40px;
+    height: 40px;
+    right: 12px;
+    bottom: 72px;
+  }
+}

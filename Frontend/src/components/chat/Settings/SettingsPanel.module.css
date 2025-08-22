@@ -1,0 +1,197 @@
+/* Layout cards */
+.card {
+  background: #ffffff;
+  border: 1px solid rgba(148,163,184,.28);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.cardTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: .2px;
+}
+.changesBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #0f766e;
+  background: rgba(16,185,129,.08);
+  border: 1px solid rgba(16,185,129,.18);
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+/* Avatar zone */
+.avatarZone {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+.avatarZoneDrag {
+  outline: 2px dashed rgba(0,168,132,.5);
+  outline-offset: 6px;
+  border-radius: 16px;
+}
+.avatarPreview {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(148,163,184,.25);
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatarPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.avatarPlaceholder {
+  color: #64748b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width: 100%;
+  height: 100%;
+}
+.avatarEditBtn {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(148,163,184,.35);
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(15,23,42,.08);
+}
+.avatarEditBtn:hover {
+  border-color: #00a884;
+  box-shadow: 0 0 0 3px rgba(0,168,132,.08);
+}
+
+/* Photo inputs */
+.photoInputs { display: flex; flex-direction: column; gap: 8px; }
+.urlInputWrap { position: relative; }
+.leftIcon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: #64748b;
+}
+.urlInput {
+  width: 100%;
+  padding: 10px 36px 10px 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,.35);
+  background: #fff;
+  outline: none;
+  font-size: 14px;
+}
+.urlInput:focus {
+  border-color: #00a884;
+  box-shadow: 0 0 0 3px rgba(0,168,132,.12);
+}
+.clearBtn {
+  position: absolute;
+  right: 8px; top: 50%; transform: translateY(-50%);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px; border: 1px solid rgba(148,163,184,.28);
+  background: #fff; color: #475569; cursor: pointer;
+}
+.clearBtn:hover { border-color: #ef4444; color: #ef4444; }
+
+.photoHint {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.errorText {
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Status input */
+.inputWrap { position: relative; }
+.textInput {
+  width: 100%;
+  padding: 12px 12px 12px 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,.35);
+  background: #fff;
+  outline: none;
+  font-size: 14px;
+}
+.textInput:focus {
+  border-color: #00a884;
+  box-shadow: 0 0 0 3px rgba(0,168,132,.12);
+}
+.charCount {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 6px;
+}
+.actionsRight { display: flex; gap: 8px; }
+
+.ghostBtn {
+  background: #fff;
+  border: 1px dashed rgba(148,163,184,.6);
+  color: #0f172a;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ghostBtn:disabled { opacity: .5; cursor: not-allowed; }
+
+.cancelBtn {
+  background: #fff;
+  border: 1px solid rgba(148,163,184,.35);
+  color: #0f172a;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.primaryBtn {
+  background: linear-gradient(135deg,#00a884,#059669);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,168,132,.28);
+}
+.primaryBtn:disabled { opacity: .7; cursor: not-allowed; }
+
+/* Small screens */
+@media (max-width: 520px) {
+  .avatarZone { grid-template-columns: 1fr; }
+  .avatarPreview { width: 88px; height: 88px; border-radius: 18px; }
+}
